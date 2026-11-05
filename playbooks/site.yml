@@ -1,0 +1,19 @@
+---
+# Hoofdplaybook: elke serverrol in een eigen play, daarna de website.
+- name: Basisinrichting van alle servers
+  hosts: servers
+  roles:
+    - common
+
+- name: Webserver inrichten
+  hosts: webservers
+  roles:
+    - webserver
+
+- name: Databaseserver inrichten
+  hosts: dbservers
+  roles:
+    - dbserver
+
+# Aparte play: de website wordt als laatste stap geüpload.
+- import_playbook: website.yml

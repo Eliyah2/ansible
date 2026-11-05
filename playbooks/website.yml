@@ -1,0 +1,38 @@
+---
+# Onafhankelijke play die de PHP-website op de webserver plaatst.
+- name: Website uploaden naar de webserver
+  hosts: webservers
+  vars:
+    website_source: "{{ playbook_dir }}/../website"
+  tasks:
+    - name: Websitebestanden uploaden
+      ansible.builtin.copy:
+        src: "{{ website_source }}/"
+        dest: "{{ web_root }}/"
+        owner: www-data
+        group: www-data
+        mode: "0644"
+        directory_mode: "0755"
+
+    - name: Databaseconfiguratie genereren
+      ansible.builtin.template:
+        src: config.php.j2
+        dest: "{{ web_root }}/config.php"
+        owner: www-data
+        group: www-data
+        mode: "0640"
+
+    - name: Controleren of de website lokaal bereikbaar is
+      ansible.builtin.uri:
+        url: "http://127.0.0.1/"
+        status_code: 200
+        return_content: true
+      register: website_check
+
+    - name: Controleren of de website de databaseserver bereikt
+      ansible.builtin.assert:
+        that:
+          - "'Eliyah Impelmans' in website_check.content"
+          - "'verbonden' in website_check.content"
+        fail_msg: "De website draait, maar de databaseverbinding werkt niet."
+        success_msg: "Website en databaseverbinding werken."

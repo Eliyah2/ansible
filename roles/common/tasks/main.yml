@@ -1,0 +1,25 @@
+---
+# Gemeenschappelijke basis voor beide servers: geen dubbele code in de
+# webserver- en databaserollen, die delegeren deze taken naar deze rol.
+- name: Basispakketten installeren
+  ansible.builtin.package:
+    name: "{{ common_packages }}"
+    state: present
+
+- name: Apt-cache verversen (Debian/Ubuntu)
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Tijdzone instellen
+  community.general.timezone:
+    name: "{{ lab_timezone }}"
+
+- name: MOTD met machinegegevens plaatsen
+  ansible.builtin.template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"

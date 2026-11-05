@@ -1,0 +1,73 @@
+---
+# Databaseserver-rol (Rocky Linux 9): MariaDB, alleen bereikbaar voor de webserver.
+- name: MariaDB en de Python-module voor Ansible installeren
+  ansible.builtin.dnf:
+    name:
+      - mariadb-server
+      - python3-PyMySQL
+    state: present
+
+- name: firewalld installeren en starten
+  block:
+    - name: firewalld-pakket installeren
+      ansible.builtin.dnf:
+        name: firewalld
+        state: present
+
+    - name: firewalld starten en inschakelen
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+- name: MariaDB-configuratie plaatsen (luisteren op het host-only netwerk)
+  ansible.builtin.template:
+    src: lab.cnf.j2
+    dest: /etc/my.cnf.d/lab.cnf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: mariadb herstarten
+
+- name: MariaDB starten en inschakelen
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: Database-poort alleen openzetten voor de webserver
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="ipv4" source address="{{ web_host_ip }}/32" port port="{{ db_port }}" protocol="tcp" accept'
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Database aanmaken
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
+
+- name: Databasegebruiker aanmaken voor de webserver
+  community.mysql.mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: "{{ db_allowed_hosts }}"
+    priv: "{{ db_name }}.*:ALL"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
+
+- name: Databaseschema klaarzetten
+  ansible.builtin.copy:
+    src: schema.sql
+    dest: /tmp/eliyah-schema.sql
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Tabellen aanmaken
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: import
+    target: /tmp/eliyah-schema.sql
+    login_unix_socket: /var/lib/mysql/mysql.sock

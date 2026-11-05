@@ -1,0 +1,12 @@
+---
+# Basispakketten op Rocky Linux 9 / AlmaLinux 9
+common_packages:
+  - curl
+  - git
+  - vim-enhanced
+  - tmux
+  - policycoreutils-python-utils
+
+# IP van de webserver, afgeleid uit de inventaris zodat het adres maar op
+# één plek staat (in inventory/hosts.ini).
+web_host_ip: "{{ hostvars[groups['webservers'][0]].ansible_host }}"

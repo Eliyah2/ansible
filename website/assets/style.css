@@ -1,0 +1,137 @@
+:root {
+    --achtergrond: #0e1117;
+    --kaart: #161c26;
+    --rand: #26303d;
+    --tekst: #e8edf5;
+    --zacht: #9aa7ba;
+    --accent: #58c7a1;
+    --fout: #e2695f;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 3rem 1.5rem 4rem;
+    background: radial-gradient(circle at 20% -10%, #1d2a3a 0%, var(--achtergrond) 55%);
+    color: var(--tekst);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.hero {
+    max-width: 900px;
+    margin: 0 auto 2.5rem;
+}
+
+.kicker {
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-size: .75rem;
+    color: var(--zacht);
+    margin: 0 0 .75rem;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 .75rem;
+    letter-spacing: -.02em;
+}
+
+.lead {
+    color: var(--zacht);
+    max-width: 55ch;
+    margin: 0 0 1.25rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.badge-ok {
+    background: rgba(88, 199, 161, .12);
+    border-color: rgba(88, 199, 161, .45);
+    color: var(--accent);
+}
+
+.badge-fout {
+    background: rgba(226, 105, 95, .12);
+    border-color: rgba(226, 105, 95, .45);
+    color: var(--fout);
+}
+
+.grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.card {
+    background: var(--kaart);
+    border: 1px solid var(--rand);
+    border-radius: 14px;
+    padding: 1.5rem;
+}
+
+.card h2 {
+    font-size: .85rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--zacht);
+    margin: 0 0 1rem;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .45rem 1.25rem;
+    margin: 0;
+}
+
+dt {
+    color: var(--zacht);
+    font-size: .85rem;
+}
+
+dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.voet {
+    max-width: 900px;
+    margin: 3rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rand);
+    color: var(--zacht);
+    font-size: .9rem;
+}
+
+.voet code {
+    background: #1f2836;
+    padding: .1rem .35rem;
+    border-radius: 5px;
+    color: var(--tekst);
+}
+
+.klein {
+    font-size: .8rem;
+    opacity: .75;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 2rem 1rem 3rem;
+    }
+}

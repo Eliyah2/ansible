@@ -1,0 +1,12 @@
+---
+# Variabelen voor alle machines (web- en databaseserver).
+lab_timezone: "Europe/Amsterdam"
+lab_owner: "Eliyah Impelmans"
+
+# Databasegegevens: zowel de databaseserver (aanmaken) als de webserver
+# (verbinden) gebruiken deze waarden, zodat ze maar op één plek staan.
+db_name: "eliyah_lab"
+db_user: "eliyah_app"
+db_password: "LabWachtwoord2026!"
+db_allowed_hosts: "192.168.56.%"
+db_port: 3306

@@ -1,0 +1,10 @@
+===========================================================
+ {{ lab_owner }} - Ansible-lab
+-----------------------------------------------------------
+ Machine : {{ inventory_hostname }} ({{ ansible_host }})
+ Distro  : {{ ansible_distribution }} {{ ansible_distribution_version }}
+ Rol     : {% if 'webservers' in group_names %}webserver{% elif 'dbservers' in group_names %}databaseserver{% else %}onbekend{% endif %}
+ Beheer  : deze machine wordt door Ansible beheerd.
+           Handmatige wijzigingen worden bij de volgende run
+           overschreven.
+===========================================================

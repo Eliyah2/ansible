@@ -1,0 +1,20 @@
+# Privésleutels nooit committen (alleen de .pub hoort in de repo)
+keys/*.key
+keys/id_*
+!keys/*.pub
+
+# Tijdelijke boxen, uitgepakte OVF's en de bekende vagrant-sleutel
+.build/
+keys/vagrant_insecure_key
+
+# VirtualBox state
+.vagrant/
+*.vbox
+*.vdi
+*.log
+
+# Ansible / editor rommel
+*.retry
+.ansible/
+.vscode/
+Thumbs.db

@@ -1,0 +1,48 @@
+---
+# Webserver-rol (Debian 12): nginx + PHP-FPM.
+- name: Webserver- en PHP-pakketten installeren
+  ansible.builtin.apt:
+    name: "{{ web_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Documentroot aanmaken
+  ansible.builtin.file:
+    path: "{{ web_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: nginx-configuratie voor de site plaatsen
+  ansible.builtin.template:
+    src: nginx-vhost.conf.j2
+    dest: /etc/nginx/sites-available/eliyah-web.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: nginx herladen
+
+- name: Standaardsite van nginx uitschakelen
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: nginx herladen
+
+- name: Site activeren
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/eliyah-web.conf
+    dest: /etc/nginx/sites-enabled/eliyah-web.conf
+    state: link
+    force: true
+  notify: nginx herladen
+
+- name: nginx en PHP-FPM starten en automatisch laten opstarten
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - nginx
+    - "php{{ php_version }}-fpm"
